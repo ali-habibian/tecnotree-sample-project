@@ -24,16 +24,19 @@ import java.util.stream.Collectors;
 public class PostServiceImpl implements PostService {
 
     private final PostRepository postRepository;
-    private final ModelMapper modelMapper;
+    private final ModelMapper modelMapper = new ModelMapper();
 
     @Override
     public Page<PostDto> getAllPostWithPagination(int page, int size) {
         Page<Post> posts = postRepository.findAllWithPagination(PageRequest.of(page, size));
 
-        return posts.map(post -> {
-//            ModelMapper modelMapper = new ModelMapper();
-            return modelMapper.map(post, PostDto.class);
-        });
+        if (posts == null) {
+            return null;
+        } else {
+            return posts.map(post -> {
+                return modelMapper.map(post, PostDto.class);
+            });
+        }
     }
 
     @Override
@@ -49,15 +52,23 @@ public class PostServiceImpl implements PostService {
         Post post = postRepository.findById(postId).orElseThrow(() ->
                 new ResourceNotFoundException("Post", "ID", postId));
 
-        return post.getComments().stream().map(comment ->
-                modelMapper.map(comment, CommentDto.class)).collect(Collectors.toSet());
+        if (post.getComments() == null) {
+            return null;
+        } else {
+            return post.getComments().stream().map(comment ->
+                    modelMapper.map(comment, CommentDto.class)).collect(Collectors.toSet());
+        }
     }
 
     @Override
     public List<PostDto> getAllPostByTitleLike(String keyword) {
         List<Post> postList = postRepository.findAllByTitleContains(keyword);
 
-        return postList.stream().map(post -> modelMapper.map(post, PostDto.class)).collect(Collectors.toList());
+        if (postList == null) {
+            return null;
+        } else {
+            return postList.stream().map(post -> modelMapper.map(post, PostDto.class)).collect(Collectors.toList());
+        }
     }
 
     @Override
