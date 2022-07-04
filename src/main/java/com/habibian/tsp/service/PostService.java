@@ -58,7 +58,7 @@ public interface PostService {
 
     /**
      * Update a post by post id
-     * If updated successfully, this method will return true else will return false
+     * If updated successfully, this method will return PostDto else will throw exception
      *
      * @param postDto (Post details that wants to update)
      * @param postId  (The ID of the post we want to update)
