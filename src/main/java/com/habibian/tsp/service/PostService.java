@@ -6,7 +6,6 @@ import com.habibian.tsp.exception.ResourceNotFoundException;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * @author Ali
@@ -38,7 +37,7 @@ public interface PostService {
      * @return (list of comments for the post with the given id)
      * @throws ResourceNotFoundException (If no post find throws an exception)
      */
-    Set<CommentDto> getAllCommentsByPostId(long postId) throws ResourceNotFoundException;
+    List<CommentDto> getAllCommentsByPostId(long postId) throws ResourceNotFoundException;
 
     /**
      * Get all posts that have the given keyword in their title

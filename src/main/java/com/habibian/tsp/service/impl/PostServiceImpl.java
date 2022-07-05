@@ -13,7 +13,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -48,7 +47,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Set<CommentDto> getAllCommentsByPostId(long postId) throws ResourceNotFoundException {
+    public List<CommentDto> getAllCommentsByPostId(long postId) throws ResourceNotFoundException {
         Post post = postRepository.findById(postId).orElseThrow(() ->
                 new ResourceNotFoundException("Post", "ID", postId));
 
@@ -56,7 +55,7 @@ public class PostServiceImpl implements PostService {
             return null;
         } else {
             return post.getComments().stream().map(comment ->
-                    modelMapper.map(comment, CommentDto.class)).collect(Collectors.toSet());
+                    modelMapper.map(comment, CommentDto.class)).collect(Collectors.toList());
         }
     }
 

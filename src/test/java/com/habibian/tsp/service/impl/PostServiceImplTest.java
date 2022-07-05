@@ -74,7 +74,7 @@ class PostServiceImplTest {
 
         when(postRepository.findById(anyLong())).thenReturn(Optional.of(post));
 
-        Set<CommentDto> commentDtoSet = postService.getAllCommentsByPostId(1);
+        List<CommentDto> commentDtoSet = postService.getAllCommentsByPostId(1);
 
         assertNotNull(commentDtoSet);
         assertEquals(3, commentDtoSet.size());
@@ -86,7 +86,7 @@ class PostServiceImplTest {
 
         when(postRepository.findById(anyLong())).thenReturn(Optional.of(post));
 
-        Set<CommentDto> commentDtoSet = postService.getAllCommentsByPostId(1);
+        List<CommentDto> commentDtoSet = postService.getAllCommentsByPostId(1);
 
         assertNull(commentDtoSet);
     }
