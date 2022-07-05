@@ -12,7 +12,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -22,7 +21,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CommentServiceImpl implements CommentService {
 
-    private CommentRepository commentRepository;
+    private final CommentRepository commentRepository;
     private final ModelMapper modelMapper = new ModelMapper();
 
     @Override
@@ -45,9 +44,13 @@ public class CommentServiceImpl implements CommentService {
     public List<CommentDto> getAllCommentsByPostId(long postId) {
         List<Comment> commentList = commentRepository.findAllByPostId(postId);
 
-        return commentList.stream().map(
-                        comment -> modelMapper.map(comment, CommentDto.class))
-                .collect(Collectors.toList());
+        if (commentList == null){
+            return null;
+        }else {
+            return commentList.stream().map(
+                            comment -> modelMapper.map(comment, CommentDto.class))
+                    .collect(Collectors.toList());
+        }
     }
 
     @Override
