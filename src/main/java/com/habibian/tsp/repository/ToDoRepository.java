@@ -18,5 +18,5 @@ public interface ToDoRepository extends JpaRepository<ToDo, Long> {
      * @param completed (A Boolean value that indicates whether the ToDo_ is finished or not
      * @return (An optional list of ToDos that match the given conditions ( userId and completed)
      */
-    public Optional<List<ToDo>> findAllByUserIdAndCompletedOrderByIdAsc(Long userId, Boolean completed);
+    public List<ToDo> findAllByUserIdAndCompletedOrderByIdAsc(Long userId, Boolean completed);
 }
