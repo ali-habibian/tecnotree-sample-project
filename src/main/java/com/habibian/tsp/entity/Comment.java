@@ -19,7 +19,7 @@ public class Comment {
     private Long id;
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE, CascadeType.REFRESH})
-    @JoinColumn(name = "post_id", nullable = false)
+    @JoinColumn(name = "post_id")
     private Post post;
 
     @Column(name = "name", nullable = false)
@@ -29,6 +29,7 @@ public class Comment {
     private String email;
 
     @Column(name = "body", nullable = false)
+    @Lob
     private String body;
 
     public Comment(Post post, String name, String email, String body) {

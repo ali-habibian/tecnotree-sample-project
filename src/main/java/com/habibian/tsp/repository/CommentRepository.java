@@ -11,13 +11,6 @@ import java.util.List;
  * @author Ali
  */
 public interface CommentRepository extends JpaRepository<Comment, Long> {
-    /**
-     * Find all comments(with pagination)
-     *
-     * @param pageable (Pageable object for pagination details)
-     * @return (Comments with Pagination)
-     */
-    Page<Comment> findAllWithPagination(Pageable pageable);
 
     /**
      * Find all comments of specific post by post id

@@ -1,76 +1,74 @@
 package com.habibian.tsp.service;
 
-import com.habibian.tsp.dto.CommentDto;
-import com.habibian.tsp.dto.PostDto;
+import com.habibian.tsp.entity.Comment;
+import com.habibian.tsp.entity.Post;
 import com.habibian.tsp.exception.ResourceNotFoundException;
+import com.habibian.tsp.repository.PostRepository;
+import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 /**
  * @author Ali
  */
-public interface PostService {
+@Service
+@RequiredArgsConstructor
+public class PostService {
 
-    /**
-     * Get all posts (with pagination)
-     *
-     * @param page (Page number)
-     * @param size (Number of posts per page)
-     * @return (List of all posts with pagination)
-     */
-    Page<PostDto> getAllPostWithPagination(int page, int size);
+    private static final Logger LOGGER = LoggerFactory.getLogger(PostService.class);
 
-    /**
-     * Get post by post id
-     *
-     * @param postId (The ID of the post we want to get)
-     * @return (Post with the given id)
-     * @throws ResourceNotFoundException (If no post find throws an exception)
-     */
-    PostDto getPostById(long postId) throws ResourceNotFoundException;
+    private final PostRepository postRepository;
 
-    /**
-     * Get comments of specific post by post id
-     *
-     * @param postId (The ID of the post we want to get its comments)
-     * @return (list of comments for the post with the given id)
-     * @throws ResourceNotFoundException (If no post find throws an exception)
-     */
-    List<CommentDto> getAllCommentsByPostId(long postId) throws ResourceNotFoundException;
+    public Page<Post> getAllPostWithPagination(int page, int size) {
+        return postRepository.findAll(PageRequest.of(page, size));
+    }
 
-    /**
-     * Get all posts that have the given keyword in their title
-     *
-     * @param keyword (The keyword that the post title contains)
-     * @return (list of posts that contain the keyword in the title)
-     */
-    List<PostDto> getAllPostByTitleLike(String keyword);
+    public Post getPostById(long postId) throws ResourceNotFoundException {
+        return postRepository.findById(postId).orElseThrow(() ->
+                new ResourceNotFoundException("Post", "ID", postId));
+    }
 
-    /**
-     * Save the post in the database
-     *
-     * @param postDto (Post details that wants to save)
-     * @return (The post details with ID of the post after being saved in the database)
-     */
-    PostDto savePost(PostDto postDto);
+    public List<Comment> getAllCommentsByPostId(long postId) throws ResourceNotFoundException {
+        Post post = postRepository.findById(postId).orElseThrow(() ->
+                new ResourceNotFoundException("Post", "ID", postId));
 
-    /**
-     * Update a post by post id
-     * If updated successfully, this method will return PostDto else will throw exception
-     *
-     * @param postDto (Post details that wants to update)
-     * @param postId  (The ID of the post we want to update)
-     * @return (The post details after being updated in the database)
-     * @throws ResourceNotFoundException (If no post find throws an exception)
-     */
-    PostDto updatePostById(long postId, PostDto postDto) throws ResourceNotFoundException;
+        return post.getComments();
+    }
 
-    /**
-     * Delete a post by post id
-     *
-     * @param postId (The ID of the post we want to delete)
-     * @throws ResourceNotFoundException (If no post find throws an exception)
-     */
-    void deletePostById(long postId) throws ResourceNotFoundException;
+    public List<Post> getAllPostByTitleLike(String keyword) {
+        return postRepository.findAllByTitleContains(keyword);
+    }
+
+    public Post savePost(Post post) {
+//        post.setComments(new ArrayList<>());
+        return postRepository.save(post);
+    }
+
+    public void saveAll(List<Post> posts) {
+        for (Post post : posts) {
+            Post save = postRepository.save(post);
+        }
+    }
+
+    public Post updatePostById(long postId, Post post) throws ResourceNotFoundException {
+        Post postBeforeUpdate = postRepository.findById(postId).orElseThrow(() ->
+                new ResourceNotFoundException("Post", "ID", postId));
+
+        postBeforeUpdate.setTitle(post.getTitle());
+        postBeforeUpdate.setBody(post.getBody());
+
+        return postRepository.save(postBeforeUpdate);
+    }
+
+    public void deletePostById(long postId) throws ResourceNotFoundException {
+        Post post = postRepository.findById(postId).orElseThrow(() ->
+                new ResourceNotFoundException("Post", "ID", postId));
+
+        postRepository.delete(post);
+    }
 }

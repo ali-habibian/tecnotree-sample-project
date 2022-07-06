@@ -4,7 +4,6 @@ import com.habibian.tsp.entity.ToDo;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * @author Ali
@@ -18,5 +17,5 @@ public interface ToDoRepository extends JpaRepository<ToDo, Long> {
      * @param completed (A Boolean value that indicates whether the ToDo_ is finished or not
      * @return (An optional list of ToDos that match the given conditions ( userId and completed)
      */
-    public List<ToDo> findAllByUserIdAndCompletedOrderByIdAsc(Long userId, Boolean completed);
+    public List<ToDo> findAllByUserIdAndCompleted(Long userId, Boolean completed);
 }

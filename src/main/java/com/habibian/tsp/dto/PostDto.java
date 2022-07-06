@@ -9,11 +9,10 @@ import lombok.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 @ToString
 public class PostDto {
-    private long id;
-    private long userId;
+    private Long id;
+    private Long userId;
     private String title;
     private String body;
 }

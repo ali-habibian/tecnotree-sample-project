@@ -1,10 +1,11 @@
 package com.habibian.tsp.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Ali
@@ -27,10 +28,12 @@ public class Post {
     private String title;
 
     @Column(name = "body", nullable = false)
+    @Lob
     private String body;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "post")
-    private Set<Comment> comments;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "post")
+    @ToString.Exclude
+    private List<Comment> comments;
 
     public Post(long userId, String title, String body) {
         this.userId = userId;
@@ -38,9 +41,9 @@ public class Post {
         this.body = body;
     }
 
-    private void addComment(Comment comment) {
+    public void addComment(Comment comment) {
         if (comments == null) {
-            comments = new HashSet<>();
+            comments = new ArrayList<>();
         }
 
         comments.add(comment);
