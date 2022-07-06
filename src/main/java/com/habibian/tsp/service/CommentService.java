@@ -1,6 +1,8 @@
 package com.habibian.tsp.service;
 
+import com.habibian.tsp.dto.CommentCreateParam;
 import com.habibian.tsp.dto.CommentDto;
+import com.habibian.tsp.dto.CommentUpdateParam;
 import com.habibian.tsp.entity.Comment;
 import com.habibian.tsp.entity.Post;
 import com.habibian.tsp.exception.ResourceNotFoundException;
@@ -33,13 +35,13 @@ public class CommentService {
         return commentRepository.findAllByPostId(postId);
     }
 
-    public Comment saveComment(CommentDto commentDto) {
-        Post post = postService.getPostById(commentDto.getPostId());
+    public Comment saveComment(CommentCreateParam createParam) {
+        Post post = postService.getPostById(createParam.getPostId());
 
         Comment comment = new Comment();
-        comment.setBody(commentDto.getBody());
-        comment.setEmail(commentDto.getEmail());
-        comment.setName(commentDto.getName());
+        comment.setBody(createParam.getBody());
+        comment.setEmail(createParam.getEmail());
+        comment.setName(createParam.getName());
         comment.setPost(post);
 
         post.addComment(comment);
@@ -47,13 +49,13 @@ public class CommentService {
         return commentRepository.save(comment);
     }
 
-    public Comment updateCommentById(long commentId, Comment comment) throws ResourceNotFoundException {
+    public Comment updateCommentById(long commentId, CommentUpdateParam updateParam) throws ResourceNotFoundException {
         Comment commentBeforeUpdate = commentRepository.findById(commentId).orElseThrow(() ->
                 new ResourceNotFoundException("Comment", "id", commentId));
 
-        commentBeforeUpdate.setName(comment.getName());
-        commentBeforeUpdate.setEmail(comment.getEmail());
-        commentBeforeUpdate.setBody(comment.getBody());
+        commentBeforeUpdate.setName(updateParam.getName());
+        commentBeforeUpdate.setEmail(updateParam.getEmail());
+        commentBeforeUpdate.setBody(updateParam.getBody());
 
         return commentRepository.save(commentBeforeUpdate);
     }

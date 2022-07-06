@@ -1,5 +1,7 @@
 package com.habibian.tsp.service;
 
+import com.habibian.tsp.dto.PostCreateParam;
+import com.habibian.tsp.dto.PostUpdateParam;
 import com.habibian.tsp.entity.Comment;
 import com.habibian.tsp.entity.Post;
 import com.habibian.tsp.exception.ResourceNotFoundException;
@@ -44,8 +46,12 @@ public class PostService {
         return postRepository.findAllByTitleContains(keyword);
     }
 
-    public Post savePost(Post post) {
-//        post.setComments(new ArrayList<>());
+    public Post savePost(PostCreateParam createParam) {
+        Post post = new Post();
+        post.setTitle(createParam.getTitle());
+        post.setBody(createParam.getBody());
+        post.setUserId(createParam.getUserId());
+
         return postRepository.save(post);
     }
 
@@ -55,12 +61,12 @@ public class PostService {
         }
     }
 
-    public Post updatePostById(long postId, Post post) throws ResourceNotFoundException {
+    public Post updatePostById(long postId, PostUpdateParam postUpdateParam) throws ResourceNotFoundException {
         Post postBeforeUpdate = postRepository.findById(postId).orElseThrow(() ->
                 new ResourceNotFoundException("Post", "ID", postId));
 
-        postBeforeUpdate.setTitle(post.getTitle());
-        postBeforeUpdate.setBody(post.getBody());
+        postBeforeUpdate.setTitle(postUpdateParam.getTitle());
+        postBeforeUpdate.setBody(postUpdateParam.getBody());
 
         return postRepository.save(postBeforeUpdate);
     }

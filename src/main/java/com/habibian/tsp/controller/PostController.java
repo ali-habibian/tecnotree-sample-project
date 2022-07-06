@@ -1,7 +1,9 @@
 package com.habibian.tsp.controller;
 
 import com.habibian.tsp.dto.CommentDto;
+import com.habibian.tsp.dto.PostCreateParam;
 import com.habibian.tsp.dto.PostDto;
+import com.habibian.tsp.dto.PostUpdateParam;
 import com.habibian.tsp.entity.Comment;
 import com.habibian.tsp.entity.Post;
 import com.habibian.tsp.service.PostService;
@@ -91,17 +93,17 @@ public class PostController {
     }
 
     @PostMapping
-    public ResponseEntity<Map<String, Object>> createPost(@RequestBody Post postDetails) {
-        Post post = postService.savePost(postDetails);
+    public ResponseEntity<Map<String, Object>> createPost(@RequestBody PostCreateParam postDetails) {
+        Post result = postService.savePost(postDetails);
 
-        Map<String, Object> response = convertPostToMap(post);
+        Map<String, Object> response = convertPostToMap(result);
 
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @PatchMapping("/{postId}")
-    public ResponseEntity<Map<String, Object>> update(@RequestBody Post post, @PathVariable long postId) {
-        Post updatedPost = postService.updatePostById(postId, post);
+    public ResponseEntity<Map<String, Object>> update(@RequestBody PostUpdateParam updateParam, @PathVariable long postId) {
+        Post updatedPost = postService.updatePostById(postId, updateParam);
 
         Map<String, Object> response = convertPostToMap(updatedPost);
 

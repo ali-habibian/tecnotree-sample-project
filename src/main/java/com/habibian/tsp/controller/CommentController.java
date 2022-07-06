@@ -1,8 +1,9 @@
 package com.habibian.tsp.controller;
 
+import com.habibian.tsp.dto.CommentCreateParam;
 import com.habibian.tsp.dto.CommentDto;
+import com.habibian.tsp.dto.CommentUpdateParam;
 import com.habibian.tsp.entity.Comment;
-import com.habibian.tsp.entity.Post;
 import com.habibian.tsp.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -69,7 +70,7 @@ public class CommentController {
     }
 
     @PostMapping
-    public ResponseEntity<Map<String, Object>> createComment(@RequestBody CommentDto commentDetails) {
+    public ResponseEntity<Map<String, Object>> createComment(@RequestBody CommentCreateParam commentDetails) {
         Comment comment = commentService.saveComment(commentDetails);
 
         Map<String, Object> response = convertCommentToMap(comment);
@@ -78,8 +79,8 @@ public class CommentController {
     }
 
     @PatchMapping("/{commentId}")
-    public ResponseEntity<Map<String, Object>> update(@RequestBody Comment comment, @PathVariable long commentId) {
-        Comment updatedComment = commentService.updateCommentById(commentId, comment);
+    public ResponseEntity<Map<String, Object>> update(@RequestBody CommentUpdateParam updateParam, @PathVariable long commentId) {
+        Comment updatedComment = commentService.updateCommentById(commentId, updateParam);
 
         Map<String, Object> response = convertCommentToMap(updatedComment);
 
