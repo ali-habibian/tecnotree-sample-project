@@ -49,4 +49,8 @@ public class Post {
         comments.add(comment);
         comment.setPost(this);
     }
+
+    public void removeComment(Comment comment) {
+        comments.remove(comment);
+    }
 }

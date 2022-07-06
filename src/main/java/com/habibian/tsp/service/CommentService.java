@@ -33,11 +33,16 @@ public class CommentService {
         return commentRepository.findAllByPostId(postId);
     }
 
-    public Comment saveComment(Comment comment) {
-        Post post = postService.getPostById(comment.getPost().getId());
+    public Comment saveComment(CommentDto commentDto) {
+        Post post = postService.getPostById(commentDto.getPostId());
+
+        Comment comment = new Comment();
+        comment.setBody(commentDto.getBody());
+        comment.setEmail(commentDto.getEmail());
+        comment.setName(commentDto.getName());
+        comment.setPost(post);
 
         post.addComment(comment);
-        comment.setPost(post);
 
         return commentRepository.save(comment);
     }
@@ -56,6 +61,10 @@ public class CommentService {
     public void deleteCommentById(long commentId) throws ResourceNotFoundException {
         Comment comment = commentRepository.findById(commentId).orElseThrow(() ->
                 new ResourceNotFoundException("Comment", "id", commentId));
+
+        Post post = postService.getPostById(comment.getPost().getId());
+
+        post.removeComment(comment);
 
         commentRepository.delete(comment);
     }
