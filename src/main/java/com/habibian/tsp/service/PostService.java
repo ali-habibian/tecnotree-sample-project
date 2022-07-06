@@ -27,15 +27,20 @@ public class PostService {
     private final PostRepository postRepository;
 
     public Page<Post> getAllPostWithPagination(int page, int size) {
+        LOGGER.info("Starting getAllPostWithPagination...page={}, size={}", page, size);
+
         return postRepository.findAll(PageRequest.of(page, size));
     }
 
     public Post getPostById(long postId) throws ResourceNotFoundException {
+        LOGGER.info("Starting getPostById...postId={}", postId);
+
         return postRepository.findById(postId).orElseThrow(() ->
                 new ResourceNotFoundException("Post", "ID", postId));
     }
 
     public List<Comment> getAllCommentsByPostId(long postId) throws ResourceNotFoundException {
+        LOGGER.info("Starting getAllCommentsByPostId...postId={}", postId);
         Post post = postRepository.findById(postId).orElseThrow(() ->
                 new ResourceNotFoundException("Post", "ID", postId));
 
@@ -43,10 +48,14 @@ public class PostService {
     }
 
     public List<Post> getAllPostByTitleLike(String keyword) {
+        LOGGER.info("Starting getAllPostByTitleLike...keyword={}", keyword);
+
         return postRepository.findAllByTitleContains(keyword);
     }
 
     public Post savePost(PostCreateParam createParam) {
+        LOGGER.info("Starting savePost...createParam={}", createParam);
+
         Post post = new Post();
         post.setTitle(createParam.getTitle());
         post.setBody(createParam.getBody());
@@ -56,12 +65,16 @@ public class PostService {
     }
 
     public void saveAll(List<Post> posts) {
+        LOGGER.info("Starting saveAll...");
+
         for (Post post : posts) {
             Post save = postRepository.save(post);
         }
     }
 
     public Post updatePostById(long postId, PostUpdateParam postUpdateParam) throws ResourceNotFoundException {
+        LOGGER.info("Starting updatePostById...postId={}, postUpdateParam={}", postId, postUpdateParam);
+
         Post postBeforeUpdate = postRepository.findById(postId).orElseThrow(() ->
                 new ResourceNotFoundException("Post", "ID", postId));
 
@@ -72,6 +85,8 @@ public class PostService {
     }
 
     public void deletePostById(long postId) throws ResourceNotFoundException {
+        LOGGER.info("Starting updatePostById...postId={}", postId);
+
         Post post = postRepository.findById(postId).orElseThrow(() ->
                 new ResourceNotFoundException("Post", "ID", postId));
 

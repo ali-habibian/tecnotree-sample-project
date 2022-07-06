@@ -8,6 +8,8 @@ import com.habibian.tsp.entity.Post;
 import com.habibian.tsp.exception.ResourceNotFoundException;
 import com.habibian.tsp.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -21,21 +23,26 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CommentService {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(CommentService.class);
+
     private final CommentRepository commentRepository;
     private final PostService postService;
 
     public Page<Comment> getAllCommentsWithPagination(int page, int size) {
+        LOGGER.info("Starting getAllCommentsWithPagination...page={}, size={}", page, size);
+
         return commentRepository.findAll(PageRequest.of(page, size));
     }
 
-    /**
-     * ToDo ResourceNotFoundException if post not find
-     */
     public List<Comment> getAllCommentsByPostId(long postId) {
+        LOGGER.info("Starting getAllCommentsByPostId...postId={}", postId);
+
         return commentRepository.findAllByPostId(postId);
     }
 
     public Comment saveComment(CommentCreateParam createParam) {
+        LOGGER.info("Starting saveComment...createParam={}", createParam);
+
         Post post = postService.getPostById(createParam.getPostId());
 
         Comment comment = new Comment();
@@ -50,6 +57,8 @@ public class CommentService {
     }
 
     public Comment updateCommentById(long commentId, CommentUpdateParam updateParam) throws ResourceNotFoundException {
+        LOGGER.info("Starting updateCommentById...commentId={}, updateParam={}", commentId, updateParam);
+
         Comment commentBeforeUpdate = commentRepository.findById(commentId).orElseThrow(() ->
                 new ResourceNotFoundException("Comment", "id", commentId));
 
@@ -61,6 +70,8 @@ public class CommentService {
     }
 
     public void deleteCommentById(long commentId) throws ResourceNotFoundException {
+        LOGGER.info("Starting deleteCommentById...commentId={}", commentId);
+
         Comment comment = commentRepository.findById(commentId).orElseThrow(() ->
                 new ResourceNotFoundException("Comment", "id", commentId));
 
@@ -72,6 +83,8 @@ public class CommentService {
     }
 
     public void saveAll(List<CommentDto> commentDtoList) {
+        LOGGER.info("Starting saveAll...");
+
         for (CommentDto commentDto : commentDtoList) {
             Post post = postService.getPostById(commentDto.getPostId());
 
